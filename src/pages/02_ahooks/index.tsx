@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useLatest from './useLatest';
 import { useMount, useUnMount } from './useMount';
 import useSafeState from './useSafeState';
 import useUpdate from './useUpdate';
+import useCreation from './useCreation';
 import { Button, message } from 'antd';
 
 const Com_useLatest = () => {
@@ -86,6 +87,55 @@ const Com_useUpdate = () => {
   );
 };
 
+const Com_useCreation = () => {
+  const creation = useCreation(() => ({
+    name: 'leo',
+    age: 18
+  }), [])
+  const update = useUpdate();
+
+  return (
+    <>
+      <div>Time: {Date.now()}</div>
+      <div>Creation: {creation.name}-{creation.age}</div>
+      <Button type="primary" style={{ display: 'block', margin: '8px' }} onClick={() => update()}>
+        update-每次产生新的数组
+      </Button>
+      <Com_useCreation2 />
+    </>
+  );
+};
+
+const Com_useCreation2 = () => {
+  const ref = useRef<any>([1])
+  const creation2 = useCreation(() => ({
+    name: 'ck',
+    age: 20
+  }), ref.current)
+  const update = useUpdate();
+
+  return (
+    <>
+      <div>Creation2: {creation2.name}-{creation2.age}</div>
+      <Button type="primary" style={{ display: 'block', margin: '8px' }} onClick={() => update()}>
+        update-ref保存数组地址-不变
+      </Button>
+      <Button type="primary" style={{ display: 'block', margin: '8px' }} onClick={() => {
+        ref.current.push(1)
+        update()
+      }}>
+        update-ref保存数组地址-push
+      </Button>
+      <Button type="primary" style={{ display: 'block', margin: '8px' }} onClick={() => {
+        ref.current = [2]
+        update()
+      }}>
+        update-ref保存数组地址-改变引用地址
+      </Button>
+    </>
+  );
+};
+
 
 const Index = () => {
   return (
@@ -107,6 +157,11 @@ const Index = () => {
 
       <div>useUpdate</div>
       <Com_useUpdate />
+
+      <div style={{ marginBottom: '50px' }} />
+
+      <div>useCreation</div>
+      <Com_useCreation />
 
       <div style={{ marginBottom: '50px' }} />
     </>

@@ -2,10 +2,15 @@ import { useRef } from 'react';
 import type { DependencyList } from 'react';
 
 const depsAreSame = <T extends DependencyList>(oldDeps: T, deps: T) => {
-  if (oldDeps === deps) return true
+  // debugger;
+  if (oldDeps === deps) {
+    return true
+  }
 
   for (let i = 0; i < oldDeps.length; i++) {
-    if (!Object.is(oldDeps[i], deps[i])) return false
+    if (!Object.is(oldDeps[i], deps[i])) {
+      return false
+    }
   }
 
   return true
